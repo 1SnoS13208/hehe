@@ -8,9 +8,9 @@
     <packaging>jar</packaging>
     <name>JavaMidTerm</name>
     <properties>
-        <maven.compiler.source>23</maven.compiler.source>
-        <maven.compiler.target>23</maven.compiler.target>
-        <path.to.fx>C:\Program Files\Java\javafx-sdk-24.0.1\lib</path.to.fx>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <path.to.fx>C:\javafx-sdk-21.0.7\lib</path.to.fx>
     </properties>
     <dependencies>
         <!-- JavaFX dependencies -->
