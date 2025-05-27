@@ -1,9 +1,8 @@
-// File: core/AIStrategy/GreedyStrategy.java
 package core.ai.tienlenai.strategies;
 
 import core.Card;
 import core.ai.tienlenai.TienLenAIStrategy;
-import core.ai.utils.CombinationFinder; // Có thể cần để tìm tổ hợp chứa 3 bích
+import core.ai.utils.CombinationFinder;
 import core.ai.utils.PlayableMoveGenerator;
 import core.ai.utils.RemainingCardsValidator;
 import core.games.tienlen.TienLenVariantRuleSet;
@@ -21,7 +20,7 @@ public class GreedyStrategy implements TienLenAIStrategy {
             return new ArrayList<>();
         }
 
-        // 1. Xử lý luật 3 Bích cho lượt đầu tiên của toàn bộ ván game
+        // Xử lý luật 3 Bích cho lượt đầu tiên của toàn bộ ván game
         if (isFirstTurnOfEntireGame) {
         	if(ruleSet.startingCard() == null) return List.of(currentHand.get(random.nextInt(currentHand.size())));
             if (ruleSet.hasStartingCard(currentHand) && ruleSet.startingCard() != null) {
@@ -48,19 +47,12 @@ public class GreedyStrategy implements TienLenAIStrategy {
             }
         }
         
-        // Logic chặt Heo (ví dụ: nếu lá cuối là Heo đơn) - Cần RuleSet cho biết type là gì
-        // Giả sử RuleSet.getCombinationIdentifier trả về một enum hoặc string mà ta có thể so sánh
-        // Ví dụ: if (lastPlayedType == TienLenRule.CombinationType.SINGLE && ruleSet.getRepresentativeCardForCombination(lastPlayedCards).getRank() == Card.Rank.TWO)
-        // (Cần kiểm tra chính xác hơn dựa trên getCombinationIdentifier và getRepresentativeCardForCombination)
-
         List<List<Card>> playableFours = PlayableMoveGenerator.findPlayableFourOfAKinds(currentHand, lastPlayedCards, ruleSet);
         if (!playableFours.isEmpty()) {
             // Greedy sẽ đánh tứ quý nhỏ nhất có thể để chặt
             playableFours.sort(Comparator.comparing(p -> ruleSet.getRepresentativeCardForCombination(p), ruleSet.getCardComparator()));
             return playableFours.get(0);
         }
-        // Tương tự cho 3 đôi thông, 4 đôi thông nếu có...
-
 
         // 3. Nếu không phải lượt đầu game và không chặt đặc biệt:
         List<List<Card>> allPlayableRegularMoves = new ArrayList<>();
@@ -70,10 +62,8 @@ public class GreedyStrategy implements TienLenAIStrategy {
             allPlayableRegularMoves.addAll(PlayableMoveGenerator.findPlayablePairs(currentHand, null, ruleSet));
             allPlayableRegularMoves.addAll(PlayableMoveGenerator.findPlayableTriples(currentHand, null, ruleSet));
             allPlayableRegularMoves.addAll(PlayableMoveGenerator.findPlayableStraights(currentHand, null, ruleSet));
-        } else { // Đánh theo người khác
-            // Tìm các bộ cùng loại (hoặc loại chặt được theo luật thường)
-            // Ví dụ, nếu trên bàn là Đơn, tìm Đơn lớn hơn. Nếu là Đôi, tìm Đôi lớn hơn.
-            // PlayableMoveGenerator đã làm điều này bằng cách gọi ruleSet.canPlayAfter.
+        } else { 
+            // Đánh theo người khác
             allPlayableRegularMoves.addAll(PlayableMoveGenerator.findPlayableSingles(currentHand, lastPlayedCards, ruleSet));
             allPlayableRegularMoves.addAll(PlayableMoveGenerator.findPlayablePairs(currentHand, lastPlayedCards, ruleSet));
             allPlayableRegularMoves.addAll(PlayableMoveGenerator.findPlayableTriples(currentHand, lastPlayedCards, ruleSet));
@@ -81,17 +71,16 @@ public class GreedyStrategy implements TienLenAIStrategy {
         }
 
         if (allPlayableRegularMoves.isEmpty()) {
-            return new ArrayList<>(); // Bỏ lượt
+            return new ArrayList<>();   // Bỏ lượt
         }
 
-        // Sắp xếp tất cả các nước đi hợp lệ và chọn nước "nhỏ nhất"
         // Tiêu chí "nhỏ nhất" của Greedy:
         // 1. Ưu tiên số lượng lá bài ít nhất (để thoát bài lẻ).
         // 2. Nếu cùng số lượng, ưu tiên bộ có lá bài đại diện nhỏ nhất.
         allPlayableRegularMoves.sort(
-        	    Comparator.comparingInt((List<Card> list) -> list.size()) // Lambda được gõ rõ ràng
+        	    Comparator.comparingInt((List<Card> list) -> list.size())
         	    .thenComparing(
-        	        (List<Card> play) -> ruleSet.getRepresentativeCardForCombination(play), // Lambda được gõ rõ ràng
+        	        (List<Card> play) -> ruleSet.getRepresentativeCardForCombination(play),
         	        ruleSet.getCardComparator()
         	    )
         	);

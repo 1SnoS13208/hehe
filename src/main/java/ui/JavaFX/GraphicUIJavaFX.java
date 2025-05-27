@@ -1,4 +1,3 @@
-// File: ui/JavaFX/GraphicUIJavaFX.java
 package ui.JavaFX;
 
 import core.Card;
@@ -19,12 +18,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-// Import các component bạn đã tạo từ package gamescreencomponents
 import ui.JavaFX.gamescreencomponents.CardView;
 import ui.JavaFX.gamescreencomponents.GameControlsComponent;
 import ui.JavaFX.gamescreencomponents.GameMessageComponent;
 import ui.JavaFX.gamescreencomponents.HumanHandComponent;
-// PlayerInfoComponent có thể không cần import trực tiếp ở đây nếu PlayersListComponent tự quản lý
 import ui.JavaFX.gamescreencomponents.PlayersListComponent;
 import ui.JavaFX.gamescreencomponents.TableCardsComponent;
 
@@ -37,7 +34,6 @@ public class GraphicUIJavaFX extends CardGameGUIJavaFX<AbstractTienLenGame<? ext
 
     private BorderPane rootLayout;
 
-    // Khai báo các biến cho từng component UI
     private GameMessageComponent gameMessageComponent;
     private PlayersListComponent playersListComponent;
     private TableCardsComponent tableCardsComponent;
@@ -54,18 +50,15 @@ public class GraphicUIJavaFX extends CardGameGUIJavaFX<AbstractTienLenGame<? ext
         this.sceneManager = sceneManager;
         this.root = initGUI();
         if (this.root == null) {
-            System.err.println("Lỗi: initGUI() trả về root là null trong GraphicUIJavaFX constructor.");
             Platform.exit();
             return;
         }
         this.currentScene = new Scene(this.root);
         primaryStage.setScene(this.currentScene);
-        // game.addGameEventListener(this); đã được gọi trong super constructor
     }
 
     @Override
     protected Parent initGUI() {
-        System.out.println("GraphicUIJavaFX: initGUI (phiên bản component hóa) bắt đầu.");
         rootLayout = new BorderPane();
         rootLayout.setPadding(new Insets(5, 10, 5, 10));
 
@@ -81,24 +74,22 @@ public class GraphicUIJavaFX extends CardGameGUIJavaFX<AbstractTienLenGame<? ext
                 );
             } else {
                 System.err.println("Lỗi: Không tìm thấy ảnh nền GameScreen: " + imagePathForGameScreen);
-                rootLayout.setStyle("-fx-background-color: #2c3e50;"); // Màu nền tối dự phòng
+                rootLayout.setStyle("-fx-background-color: #2c3e50;"); 
             }
         } catch (Exception e) {
             System.err.println("Ngoại lệ khi tải ảnh nền GameScreen: " + imagePathForGameScreen + ". " + e.getMessage());
             rootLayout.setStyle("-fx-background-color: #2c3e50;");
         }
 
-        // --- Khởi tạo các Component View ---
-        gameMessageComponent = new GameMessageComponent("Chào mừng đến với Tiến Lên!"); //
+        gameMessageComponent = new GameMessageComponent("Chào mừng đến với Tiến Lên!"); 
 
         if (game != null && game.getPlayers() != null) {
-            // Truyền game.getPlayers() vì constructor PlayersListComponent nhận List<TienLenPlayer>
-            playersListComponent = new PlayersListComponent(game.getPlayers()); //
+            playersListComponent = new PlayersListComponent(game.getPlayers()); 
         } else {
             playersListComponent = new PlayersListComponent(new ArrayList<>());
         }
         
-        tableCardsComponent = new TableCardsComponent(); //
+        tableCardsComponent = new TableCardsComponent(); 
         
         humanHandComponent = new HumanHandComponent(
                 mouseEvent -> {
@@ -130,16 +121,11 @@ public class GraphicUIJavaFX extends CardGameGUIJavaFX<AbstractTienLenGame<? ext
                                 boolean isGameOverForButton = (game.getGeneralGameState() == Game.GeneralGameState.GAME_OVER);
                                 gameControlsComponent.updateButtonStates(
                                     !selectedCards.isEmpty(),
-                                    game.canPass(currentPlayerWhoIsAttemptingToSelect), // Sử dụng currentPlayerWhoIsAttemptingToSelect
+                                    game.canPass(currentPlayerWhoIsAttemptingToSelect), 
                                     isGameOverForButton
                                 );
                             }
-                        } else {
-                            // Tùy chọn: In ra log nếu không cho phép chọn bài để gỡ lỗi
-                            // System.out.println("Không thể chọn bài: currentPlayer=" + (currentPlayerWhoIsAttemptingToSelect != null ? currentPlayerWhoIsAttemptingToSelect.getName() : "null") + 
-                            //                    ", isAI=" + (currentPlayerWhoIsAttemptingToSelect != null ? currentPlayerWhoIsAttemptingToSelect.isAI() : "N/A") +
-                            //                    ", gameState=" + (game != null ? game.getCurrentTienLenState() : "N/A"));
-                        }
+                        } 
                     }
                 }
             );
@@ -160,22 +146,21 @@ public class GraphicUIJavaFX extends CardGameGUIJavaFX<AbstractTienLenGame<? ext
 
 
         // --- Sắp xếp các Component vào rootLayout ---
-        rootLayout.setTop(gameMessageComponent); //
+        rootLayout.setTop(gameMessageComponent); 
         BorderPane.setMargin(gameMessageComponent, new Insets(5, 0, 10, 0));
 
-        rootLayout.setLeft(playersListComponent); //
+        rootLayout.setLeft(playersListComponent); 
         BorderPane.setMargin(playersListComponent, new Insets(0, 10, 0, 0));
 
-        rootLayout.setCenter(tableCardsComponent); //
+        rootLayout.setCenter(tableCardsComponent); 
         BorderPane.setMargin(tableCardsComponent, new Insets(0, 10, 10, 0));
         
-        rootLayout.setBottom(humanHandComponent); //
+        rootLayout.setBottom(humanHandComponent); 
         BorderPane.setMargin(humanHandComponent, new Insets(10, 0, 0, 0));
 
-        rootLayout.setRight(gameControlsComponent); //
+        rootLayout.setRight(gameControlsComponent); 
         BorderPane.setMargin(gameControlsComponent, new Insets(0, 0, 0, 10));
         
-        System.out.println("GraphicUIJavaFX: initGUI (component hóa) hoàn tất.");
         return rootLayout;
     }
     
@@ -280,8 +265,8 @@ public class GraphicUIJavaFX extends CardGameGUIJavaFX<AbstractTienLenGame<? ext
                 }
                 gameMessageComponent.setMessage(turnMessage);
             }
-            if (!player.isAI()) { // Nếu người chơi bắt đầu lượt là Human
-                 selectedCards.clear(); // Xóa lựa chọn bài của người Human trước đó
+            if (!player.isAI()) { 
+                 selectedCards.clear(); 
             }
             updateGameState(); 
         });
@@ -290,20 +275,14 @@ public class GraphicUIJavaFX extends CardGameGUIJavaFX<AbstractTienLenGame<? ext
 
     @Override
     public void displayPlayerHand(TienLenPlayer player) {
-        // 'player' ở đây là người chơi mà có thể có sự kiện nào đó yêu cầu hiển thị bài cụ thể
-        // Tuy nhiên, updateGameState() là nơi chính để cập nhật giao diện humanHandComponent
-        // dựa trên currentPlayer.
-        // Nếu phương thức này vẫn được gọi từ đâu đó và quan trọng, cần đảm bảo nó nhất quán:
         Platform.runLater(() -> {
             if (humanHandComponent != null && game != null && game.getCurrentPlayer() != null) {
                 TienLenPlayer currentTurnPlayer = game.getCurrentPlayer();
-                // Chỉ hiển thị nếu 'player' được yêu cầu là người chơi Human hiện tại đang đến lượt
                 if (player != null && !player.isAI() && player == currentTurnPlayer &&
                     game.getCurrentTienLenState() == TienLenGameState.WAITING_FOR_PLAYER_INPUT) {
                     humanHandComponent.setHandTitle("Bài của " + player.getName());
                     humanHandComponent.displayHand(player.getHand(), selectedCards, game.getRuleSet().getCardComparator());
                 }
-                // Các trường hợp khác đã được updateGameState xử lý
             }
         });
     }
@@ -319,10 +298,8 @@ public class GraphicUIJavaFX extends CardGameGUIJavaFX<AbstractTienLenGame<? ext
             game.getCurrentTienLenState() == TienLenGameState.WAITING_FOR_PLAYER_INPUT) {
             if (selectedCards.isEmpty()) {
                 if (gameMessageComponent != null) gameMessageComponent.setMessage("Bạn chưa chọn bài để đánh!");
-                else System.out.println("Bạn chưa chọn bài để đánh!");
                 return;
             }
-            System.out.println("Người chơi Human " + currentPlayer.getName() + " dự định đánh: " + selectedCards);
             game.setPlayerInput(new ArrayList<>(selectedCards));
         } else {
             String msg = "Không phải lượt của bạn hoặc game không chờ input.";
@@ -332,7 +309,6 @@ public class GraphicUIJavaFX extends CardGameGUIJavaFX<AbstractTienLenGame<? ext
                 msg = "Game không ở trạng thái chờ bạn đánh bài.";
             }
             if (gameMessageComponent != null) gameMessageComponent.setMessage(msg);
-            else System.out.println(msg);
         }
     }
 
@@ -346,11 +322,9 @@ public class GraphicUIJavaFX extends CardGameGUIJavaFX<AbstractTienLenGame<? ext
        if (currentPlayer != null && !currentPlayer.isAI() &&
            game.getCurrentTienLenState() == TienLenGameState.WAITING_FOR_PLAYER_INPUT) {
            if (game.canPass(currentPlayer)) {
-                System.out.println("Người chơi Human " + currentPlayer.getName() + " dự định bỏ lượt.");
                 game.setPlayerInput(new ArrayList<>()); 
            } else {
                if (gameMessageComponent != null) gameMessageComponent.setMessage("Bạn không thể bỏ lượt lúc này!");
-               else System.out.println("Bạn không thể bỏ lượt lúc này!");
            }
        } else {
            String msg = "Không phải lượt của bạn hoặc game không chờ input.";
@@ -360,14 +334,12 @@ public class GraphicUIJavaFX extends CardGameGUIJavaFX<AbstractTienLenGame<? ext
                msg = "Game không ở trạng thái chờ bạn bỏ lượt.";
            }
            if (gameMessageComponent != null) gameMessageComponent.setMessage(msg);
-           else System.out.println(msg);
        }
     }
 
     @Override
     public void onCardsPlayed(TienLenPlayer player, List<Card> cardsPlayed, List<Card> newLastPlayedCards) {
         Platform.runLater(() -> {
-            // Xóa selectedCards nếu người vừa đánh bài là Human (bất kỳ Human nào, không chỉ người đầu tiên)
             if (player != null && !player.isAI()) { 
                 selectedCards.clear(); 
             }
@@ -383,16 +355,11 @@ public class GraphicUIJavaFX extends CardGameGUIJavaFX<AbstractTienLenGame<? ext
         selectedCards.clear(); 
         waitingForInput = false;
         
-        System.out.println("GraphicUIJavaFX: Nút Ván Mới được nhấn. Đang gọi game.resetGame().");
-        game.resetGame(); // Dừng game loop cũ, reset trạng thái, chia bài mới.
-                          // Sau lệnh này, game.getGeneralGameState() nên là RUNNING.
+        game.resetGame(); 
 
-        // SAU KHI RESET, CẦN KHỞI ĐỘNG LẠI GAME LOOP CHO VÁN MỚI
         if (game.getGeneralGameState() == Game.GeneralGameState.RUNNING) {
-            System.out.println("GraphicUIJavaFX: Game đã reset và ở trạng thái RUNNING. Đang gọi game.startGameLoop().");
-            game.startGameLoop(); // Khởi động lại vòng lặp game (sẽ tạo thread mới nếu cần)
+            game.startGameLoop(); 
         } else {
-            // Trường hợp này không nên xảy ra nếu resetGame() hoạt động đúng.
             String errorMessage = "Lỗi sau khi reset: Game không ở trạng thái RUNNING. Vòng lặp không được khởi động. Trạng thái hiện tại: " + game.getGeneralGameState();
             System.err.println(errorMessage);
             if (gameMessageComponent != null) {
@@ -412,7 +379,6 @@ public class GraphicUIJavaFX extends CardGameGUIJavaFX<AbstractTienLenGame<? ext
 
     @Override
     public void onGameOver(List<TienLenPlayer> winners) {
-        System.out.println("GraphicUIJavaFX.onGameOver được gọi!");
         String resultMessage = createGameOverMessage(winners);
         Platform.runLater(() -> {
             if (gameMessageComponent != null) {
@@ -428,8 +394,6 @@ public class GraphicUIJavaFX extends CardGameGUIJavaFX<AbstractTienLenGame<? ext
             }
             alert.initModality(Modality.APPLICATION_MODAL);
             alert.showAndWait();
-            // updateGameState() sẽ tự động được gọi khi trạng thái game là GAME_OVER,
-            // giúp cập nhật trạng thái các nút (ví dụ: bật nút "Ván mới").
         });
     }
 
@@ -462,8 +426,6 @@ public class GraphicUIJavaFX extends CardGameGUIJavaFX<AbstractTienLenGame<? ext
 
     @Override
     public List<Card> getPlayerCardSelection(TienLenPlayer player) {
-        // 'player' là người chơi mà game engine đang yêu cầu input
-        // (Tuy nhiên, với mô hình hiện tại, input được gửi qua game.setPlayerInput())
         if (player != null && !player.isAI() && game != null && game.getCurrentPlayer() == player &&
             game.getCurrentTienLenState() == TienLenGameState.WAITING_FOR_PLAYER_INPUT) {
             return new ArrayList<>(selectedCards);

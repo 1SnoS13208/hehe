@@ -1,4 +1,3 @@
-// File: ui/JavaFX/gamescreencomponents/TableCardsComponent.java
 package ui.JavaFX.gamescreencomponents;
 
 import core.Card;
@@ -17,7 +16,7 @@ import java.util.List;
 
 public class TableCardsComponent extends VBox {
     private Label playedCardsTitle;
-    private HBox playedCardsBox; // Nơi chứa các CardView của bài đã đánh
+    private HBox playedCardsBox; 
 
     public TableCardsComponent() {
         this.setAlignment(Pos.CENTER);
@@ -34,7 +33,7 @@ public class TableCardsComponent extends VBox {
         DropShadow ds = new DropShadow(); ds.setRadius(2); ds.setOffsetX(1); ds.setOffsetY(1); ds.setColor(Color.rgb(0,0,0,0.7));
         playedCardsTitle.setEffect(ds);
 
-        playedCardsBox = new HBox(5); // Spacing giữa các lá bài
+        playedCardsBox = new HBox(5);
         playedCardsBox.setAlignment(Pos.CENTER);
         playedCardsBox.setPadding(new Insets(10));
         playedCardsBox.setStyle("-fx-background-color: transparent;");
@@ -46,11 +45,7 @@ public class TableCardsComponent extends VBox {
         playedCardsBox.getChildren().clear();
         if (cards != null && !cards.isEmpty()) {
             for (Card card : cards) {
-                // Quan trọng: Bạn cần cách để tạo CardView.
-                // Nếu CardView là public static inner class của GraphicUIJavaFX:
-                // GraphicUIJavaFX.CardView cardView = new GraphicUIJavaFX.CardView(card);
-                // Nếu CardView là một lớp public riêng:
-                CardView cardView = new CardView(card); // Giả sử có constructor này
+                CardView cardView = new CardView(card);
                 playedCardsBox.getChildren().add(cardView);
             }
         } else {

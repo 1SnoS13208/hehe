@@ -34,7 +34,6 @@ public class SamLocRule implements TienLenVariantRuleSet {
         }
     }
     
-
     @Override
     public Comparator<Card> getCardComparator() {
         return SAM_LOC_CARD_COMPARATOR;
@@ -51,15 +50,11 @@ public class SamLocRule implements TienLenVariantRuleSet {
 
         if (basicType == TienLenVariantRuleSet.CombinationType.STRAIGHT) {
 
-            if (sortedCards.size() < 3) return CombinationType.INVALID; // Cần thiết cho isMienBacStraight
+            if (sortedCards.size() < 3) return CombinationType.INVALID; 
   
-            // Nếu qua được các kiểm tra -> là sảnh TLMB hợp lệ
-            return CombinationType.STRAIGHT; // Vẫn là STRAIGHT, nhưng đã được validate đồng chất
+            return CombinationType.STRAIGHT; 
         }
         
-        // Đối với các bộ khác như PAIR, TRIPLE, FOUR_OF_KIND, THREE_PAIR_STRAIGHT, FOUR_PAIR_STRAIGHT
-        // TLMB thường không yêu cầu đồng chất, nên kết quả từ TienLenCombinationLogic có thể là cuối cùng.
-        // Nếu có luật nào khác, bạn thêm kiểm tra ở đây.
         return basicType;
     }
 
@@ -70,19 +65,16 @@ public class SamLocRule implements TienLenVariantRuleSet {
 
     @Override
     public boolean canPlayAfter(List<Card> newCards, List<Card> previousCards) {
-        // Gọi hàm logic chung
         boolean canPlayGenerally = TienLenPlayabilityLogic.canPlayAfter(newCards, previousCards, this);
         if (!canPlayGenerally) return false;
 
-        // --- ÁP DỤNG CÁC LUẬT CHẶT CHẼ HƠN CỦA MIỀN BẮC NẾU CẦN ---
         TienLenVariantRuleSet.CombinationType newType = (TienLenVariantRuleSet.CombinationType) getCombinationIdentifier(newCards);
         TienLenVariantRuleSet.CombinationType prevType = (TienLenVariantRuleSet.CombinationType) getCombinationIdentifier(previousCards);
 
         if (newType != prevType) {
-            return false; // Phải cùng loại bài (đơn với đơn, đôi với đôi, v.v.)
+            return false;
         }
 
-        // Sắp xếp để dễ lấy lá bài (ví dụ lá đầu tiên cho chất của sảnh/đơn, hoặc màu của đôi)
         List<Card> sortedNewCards = new ArrayList<>(newCards);
         Collections.sort(sortedNewCards, getCardComparator());
         List<Card> sortedPreviousCards = new ArrayList<>(previousCards);
@@ -91,51 +83,34 @@ public class SamLocRule implements TienLenVariantRuleSet {
         Card newRep = getRepresentativeCardForCombination(sortedNewCards);
         Card prevRep = getRepresentativeCardForCombination(sortedPreviousCards);
 
-        if (newRep == null || prevRep == null) return false; // Không có lá đại diện
+        if (newRep == null || prevRep == null) return false; 
 
         switch (newType) {
             case SINGLE:
-                if (newCards.size() != 1 || previousCards.size() != 1) return false; // Đảm bảo là đơn
-                // 1. Phải đồng chất (cùng suit
-                // 2. Phải lớn hơn (đã đồng chất, giờ so sánh rank qua comparator)
+                if (newCards.size() != 1 || previousCards.size() != 1) return false; 
                 return getCardComparator().compare(newRep, prevRep) > 0;
 
-            case PAIR: // Đôi (đã được xác định là cùng rank và cùng màu bởi getCombinationIdentifier)
+            case PAIR:
                 if (newCards.size() != 2 || previousCards.size() != 2) return false;
-                // 1. Phải đồng màu (hai đôi phải cùng màu đỏ, hoặc cùng màu đen)
-                // Màu của đôi được quyết định bởi màu của các lá bài trong đôi (chúng giống nhau)
-
-                // 2. Phải lớn hơn (so sánh lá đại diện)
+                
                 return getCardComparator().compare(newRep, prevRep) > 0;
 
             case TRIPLE:
                 if (newCards.size() != 3 || previousCards.size() != 3) return false;
-                // Luật "sám cô đồng chất lẻ x" của bạn rất đặc thù và phức tạp để tổng quát hóa
-                // nếu không có quy tắc rõ ràng về việc xác định "chất lẻ" đó.
-                // Hiện tại, chúng ta sẽ bỏ qua yêu cầu "đồng chất" cho sám cô khi chặt nhau
-                // và chỉ yêu cầu rank cao hơn.
-                // NẾU BẠN MUỐN MỘT QUY TẮC ĐƠN GIẢN HƠN CHO "ĐỒNG CHẤT": ví dụ, lá bài lớn nhất
-                // của bộ ba mới phải cùng chất với lá bài lớn nhất của bộ ba cũ.
-                // if (newRep.getSuit() != prevRep.getSuit()) {
-                //     return false;
-                // }
+                
                 return getCardComparator().compare(newRep, prevRep) > 0;
 
-            case STRAIGHT: // Sảnh (đã được xác định là đồng chất bởi getCombinationIdentifier)
-                // 1. Phải cùng số lá
+            case STRAIGHT:
                 if (sortedNewCards.size() != sortedPreviousCards.size()) {
                     return false;
                 }
-                // 3. Phải lớn hơn (so sánh lá đại diện - lá lớn nhất của sảnh)
                 return getCardComparator().compare(newRep, prevRep) > 0;
             
             default:
-
-                return false; // An toàn hơn là không cho phép nếu không có luật rõ ràng
+                return false; 
         }
     }
     
-    // ... (getRepresentativeCardForCombination, isCardValidInStraight)
     @Override
     public Card getRepresentativeCardForCombination(List<Card> combination) {
         if (combination == null || combination.isEmpty()) return null;
@@ -156,7 +131,7 @@ public class SamLocRule implements TienLenVariantRuleSet {
 
     @Override
     public int getTwoRankValue() {
-        return 15; // Giá trị của quân 2
+        return 15; 
     }
 
 	@Override

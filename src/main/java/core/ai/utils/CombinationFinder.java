@@ -1,4 +1,3 @@
-// File: core/ai/utils/CombinationFinder.java
 package core.ai.utils;
 
 import core.Card;
@@ -27,9 +26,6 @@ public class CombinationFinder {
                     List<Card> pair = new ArrayList<>();
                     pair.add(sortedHand.get(i));
                     pair.add(sortedHand.get(j));
-                    // Đảm bảo rằng tổ hợp này là "hợp lệ" theo định nghĩa cơ bản của RuleSet (nếu cần)
-                    // tuy nhiên, isPair thường là một khái niệm chung.
-                    // RuleSet.isValidCombination(pair) có thể được gọi ở đây nếu muốn chặt chẽ.
                     pairs.add(pair);
                 }
             }
@@ -37,24 +33,21 @@ public class CombinationFinder {
         // Loại bỏ các đôi trùng lặp hoặc chỉ giữ lại các đôi "đẹp nhất" nếu RuleSet có định nghĩa
         // Hiện tại, trả về tất cả các cặp 2 lá cùng rank.
         // Để tránh trùng lặp (ví dụ 3S-3C và 3C-3S), cần logic phức tạp hơn hoặc đảm bảo sortedHand.
-        // Hoặc, chỉ tìm các cặp không chồng chéo theo rank như logic cũ:
         List<List<Card>> distinctRankPairs = new ArrayList<>();
         List<Card.Rank> addedRanks = new ArrayList<>();
-        List<Card> tempSortedHand = new ArrayList<>(hand); // Sắp xếp lại để lấy đôi mạnh nhất theo suit nếu cần
+        List<Card> tempSortedHand = new ArrayList<>(hand);
         tempSortedHand.sort(ruleSet.getCardComparator());
 
         for (int i = 0; i < tempSortedHand.size() - 1; i++) {
             if (tempSortedHand.get(i).getRank() == tempSortedHand.get(i + 1).getRank()) {
                 if (!addedRanks.contains(tempSortedHand.get(i).getRank())) {
                     List<Card> pair = new ArrayList<>();
-                    // Lấy 2 lá bất kỳ cùng rank, hoặc 2 lá mạnh nhất theo comparator
-                    // Để đơn giản, lấy 2 lá kề nhau sau khi sort
                     pair.add(tempSortedHand.get(i));
                     pair.add(tempSortedHand.get(i+1));
                     distinctRankPairs.add(pair);
                     addedRanks.add(tempSortedHand.get(i).getRank());
                 }
-                i++; // Bỏ qua lá đã xử lý
+                i++; 
             }
         }
         return distinctRankPairs;
@@ -74,8 +67,6 @@ public class CombinationFinder {
                 triple.add(sortedHand.get(i + 1));
                 triple.add(sortedHand.get(i + 2));
                 triples.add(triple);
-                // Để tìm tất cả các bộ ba, không nên i+=2 ở đây nếu có nhiều hơn 3 lá cùng rank
-                // Nhưng nếu chỉ muốn các bộ ba không chồng chéo rank, i+=2 là đúng
                 i += 2;
             }
         }
@@ -105,7 +96,7 @@ public class CombinationFinder {
     }
 
     public static List<List<Card>> findAllStraights(List<Card> hand, TienLenVariantRuleSet ruleSet, int minLength) {
-        if (hand == null || hand.size() < minLength || minLength < 3) { // Sảnh thường có độ dài tối thiểu
+        if (hand == null || hand.size() < minLength || minLength < 3) {
             return new ArrayList<>();
         }
         List<List<Card>> allStraights = new ArrayList<>();
@@ -134,13 +125,7 @@ public class CombinationFinder {
                 for (int k = 0; k < potentialStraight.size() - 1; k++) {
                     Card c1 = potentialStraight.get(k);
                     Card c2 = potentialStraight.get(k+1);
-                    // Cần một cách để kiểm tra "liền kề về rank cho sảnh" từ RuleSet
-                    // Vì getCardComparator() chỉ so sánh hơn kém, không đảm bảo liền kề rank theo kiểu 3-4-5.
-                    // Đây là một điểm phức tạp khi tổng quát hóa hoàn toàn.
-                    // Tạm thời giả định getRank().getValue() là đủ để kiểm tra liền kề cho các game đơn giản,
-                    // nhưng RuleSet nên cung cấp một hàm isConsecutiveForStraight(card1, card2).
-                    // Đối với TienLen, bạn có thể dùng TienLenRule.getTienLenValue()
-                    if (c2.getRank().getValue() - c1.getRank().getValue() != 1) { // Đây là giả định đơn giản!
+                    if (c2.getRank().getValue() - c1.getRank().getValue() != 1) { 
                         isSequence = false;
                         break;
                     }

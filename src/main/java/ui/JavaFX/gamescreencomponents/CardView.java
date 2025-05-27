@@ -1,16 +1,14 @@
-// File: ui/JavaFX/gamescreencomponents/CardView.java
-package ui.JavaFX.gamescreencomponents; // Đặt đúng package
+package ui.JavaFX.gamescreencomponents;
 
-import core.Card; // Import lớp Card từ core
+import core.Card;
 import javafx.geometry.Pos;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import java.io.InputStream; // Đã có
+import java.io.InputStream;
 
-// Lớp CardView giờ là một lớp public độc lập
 public class CardView extends StackPane {
     private Card card;
     private boolean selected;
@@ -20,8 +18,6 @@ public class CardView extends StackPane {
     private static final double CARD_WIDTH = 80;
     private static final double CARD_HEIGHT = 110;
 
-    // Đường dẫn có thể cần điều chỉnh nếu vị trí tương đối thay đổi,
-    // nhưng nếu bắt đầu bằng "/" thì nó là tuyệt đối từ gốc resources.
     private static final String CARD_IMAGE_PATH_PREFIX = "/cards/";
     private static final String CARD_IMAGE_EXTENSION = ".png";
 
@@ -30,7 +26,6 @@ public class CardView extends StackPane {
     static {
         try {
             String cardBackPath = CARD_IMAGE_PATH_PREFIX + "BACK" + CARD_IMAGE_EXTENSION;
-            // Khi CardView là lớp riêng, getClass() sẽ tham chiếu đến CardView.class
             InputStream stream = CardView.class.getResourceAsStream(cardBackPath);
             if (stream != null) {
                 CARD_BACK_IMAGE = new Image(stream);
@@ -71,8 +66,6 @@ public class CardView extends StackPane {
                 cardImageView.setImage(CARD_BACK_IMAGE);
             } else {
                 System.err.println("CardView: Card is null và không có CARD_BACK_IMAGE.");
-                // Cân nhắc set một màu nền mặc định cho cardImageView nếu không có ảnh
-                // Ví dụ: this.setStyle("-fx-background-color: lightgrey; -fx-border-color: black;");
             }
             return;
         }
@@ -84,7 +77,6 @@ public class CardView extends StackPane {
         }
 
         String fullImagePath = CARD_IMAGE_PATH_PREFIX + imageFileName + CARD_IMAGE_EXTENSION;
-        // Sử dụng getClass() của instance CardView để lấy resource
         InputStream imageStream = getClass().getResourceAsStream(fullImagePath);
 
         if (imageStream != null) {
@@ -142,7 +134,7 @@ public class CardView extends StackPane {
                 System.err.println("Suit không hợp lệ cho tên file ảnh: " + c.getSuit());
                 return "error_card_name";
         }
-        return rankStr + "-" + suitStr; // Giữ nguyên quy ước tên file của bạn
+        return rankStr + "-" + suitStr;
     }
 
     public boolean isSelected() {

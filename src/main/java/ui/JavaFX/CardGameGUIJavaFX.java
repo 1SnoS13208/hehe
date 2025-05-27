@@ -1,4 +1,3 @@
-// ui/CardGameGUIJavaFX.java
 package ui.JavaFX;
 
 import core.Game;
@@ -80,7 +79,6 @@ public abstract class CardGameGUIJavaFX<T extends Game<?>> implements Game.GameE
 
     @Override
     public void onGameOver(List<TienLenPlayer> winners) {
-    	System.out.println("onGameOver được gọi trong CardGameGUIJavaFX!");
         Platform.runLater(() -> {
             StringBuilder sb = new StringBuilder("GAME KẾT THÚC! Người thắng: ");
             if (winners.isEmpty()) {

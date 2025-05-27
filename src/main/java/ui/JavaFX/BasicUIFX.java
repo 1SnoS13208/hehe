@@ -46,21 +46,20 @@ public class BasicUIFX extends CardGameGUIJavaFX<AbstractTienLenGame<? extends T
     private Map<TienLenPlayer, VBox> playerPanels;
 
     public BasicUIFX(AbstractTienLenGame<? extends TienLenVariantRuleSet> game, Stage primaryStage, SceneManager sceneManager) {
-        super(game, primaryStage); // Now the super constructor does less
+        super(game, primaryStage); 
 
         this.sceneManager = sceneManager;
-        this.root = initGUI(); // Initialize the 'root' field from the superclass. initGUI() is called ONCE.
-        this.currentScene = new Scene(this.root); // Initialize the 'currentScene' field from the superclass.
+        this.root = initGUI(); 
+        this.currentScene = new Scene(this.root); 
 
-        primaryStage.setScene(this.currentScene); // Set the definitive scene for the game.
+        primaryStage.setScene(this.currentScene); 
         primaryStage.setMaximized(false);
-        primaryStage.setMaximized(true); // Maximize the stage with this scene.
+        primaryStage.setMaximized(true); 
     }
 
 
     @Override
     protected Parent initGUI() {
-        System.out.println("initGUI started.");
         playerPanels = new HashMap<>();
         rootLayout = new BorderPane();
         rootLayout.setPadding(new Insets(20));
@@ -83,10 +82,8 @@ public class BasicUIFX extends CardGameGUIJavaFX<AbstractTienLenGame<? extends T
         allPlayersInfoBox.setPrefWidth(200);
         allPlayersInfoBox.setMinWidth(180);
         allPlayersInfoBox.setMaxWidth(250);
-        System.out.println("allPlayersInfoBox created.");
         
         List<TienLenPlayer> players = game.getPlayers();
-        System.out.println("Number of players found: " + players.size());
         
         players.sort((p1, p2) -> {
             if (!p1.isAI() && p2.isAI()) return -1;
@@ -115,11 +112,9 @@ public class BasicUIFX extends CardGameGUIJavaFX<AbstractTienLenGame<? extends T
 
             playerPanels.put(p, playerPanel);
             allPlayersInfoBox.getChildren().add(playerPanel);
-            System.out.println("Added player panel for " + p.getName() + " to allPlayersInfoBox.");
         }
         
         rootLayout.setLeft(allPlayersInfoBox);
-        System.out.println("allPlayersInfoBox set to LEFT.");
         BorderPane.setMargin(allPlayersInfoBox, new Insets(0, 20, 0, 0)); 
 
         // --- Played Cards Section (CENTER) ---
@@ -189,7 +184,6 @@ public class BasicUIFX extends CardGameGUIJavaFX<AbstractTienLenGame<? extends T
 
         controlBox.getChildren().addAll(playButton, passButton, newGameButton, backToMainMenuButton);
         rootLayout.setRight(controlBox);
-        System.out.println("initGUI finished. RootLayout has " + rootLayout.getChildren().size() + " children.");
         return rootLayout;
     }
 
@@ -235,7 +229,6 @@ public class BasicUIFX extends CardGameGUIJavaFX<AbstractTienLenGame<? extends T
     @Override
     public void updateGameState() {
         Platform.runLater(() -> {
-            // Cập nhật playedCardsBox (giữ nguyên logic của bạn)
             playedCardsBox.getChildren().clear();
             List<Card> lastPlayed = game.getLastPlayedCards();
             if (lastPlayed != null && !lastPlayed.isEmpty()) {
@@ -247,21 +240,19 @@ public class BasicUIFX extends CardGameGUIJavaFX<AbstractTienLenGame<? extends T
                 playedCardsBox.getChildren().add(new Label("Không có bài trên bàn."));
             }
 
-            // Cập nhật playerPanels (giữ nguyên logic của bạn)
             for (TienLenPlayer p : game.getPlayers()) {
                 VBox playerPanel = playerPanels.get(p);
-                if (playerPanel != null && playerPanel.getChildren().size() >= 2) { // Thêm kiểm tra an toàn
+                if (playerPanel != null && playerPanel.getChildren().size() >= 2) { 
                     Label cardsCountLabel = (Label) playerPanel.getChildren().get(1);
                     cardsCountLabel.setText("Bài: " + p.getHand().size());
 
                     Label nameLabel = (Label) playerPanel.getChildren().get(0);
 
-                    // Chỉ thay đổi style nếu game chưa kết thúc, nếu kết thúc thì giữ nguyên hoặc đặt style cố định
                     if (game.getGeneralGameState() != Game.GeneralGameState.GAME_OVER && game.getCurrentPlayer() == p) {
                         playerPanel.setStyle("-fx-border-color: blue; -fx-border-width: 3; -fx-border-radius: 5; -fx-background-color: #e0e0ff;");
                         nameLabel.setText(p.getName() + (p.isAI() ? " (AI) - Lượt!" : " (Bạn) - Lượt!"));
                         nameLabel.setTextFill(Color.BLUE);
-                    } else if (game.getGeneralGameState() != Game.GeneralGameState.GAME_OVER) { // Game đang chạy nhưng không phải lượt người này
+                    } else if (game.getGeneralGameState() != Game.GeneralGameState.GAME_OVER) { 
                         playerPanel.setStyle("-fx-border-color: lightgray; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-color: #f8f8f8;");
                         nameLabel.setText(p.getName() + (p.isAI() ? " (AI)" : ""));
                         nameLabel.setTextFill(Color.BLACK);
@@ -273,28 +264,21 @@ public class BasicUIFX extends CardGameGUIJavaFX<AbstractTienLenGame<? extends T
                 }
             }
 
-            // Xử lý trạng thái nút và hiển thị tay bài
             boolean isGameOver = (game.getGeneralGameState() == Game.GeneralGameState.GAME_OVER);
-            TienLenPlayer currentPlayer = game.getCurrentPlayer(); // Có thể null nếu game vừa kết thúc và chưa có ván mới
+            TienLenPlayer currentPlayer = game.getCurrentPlayer(); 
 
             if (isGameOver) {
                 // GAME ĐÃ KẾT THÚC
                 playButton.setDisable(true);
                 passButton.setDisable(true);
-                System.out.println("updateGameState: Game Over - Nút Đánh bài và Bỏ lượt đã bị vô hiệu hóa.");
 
                 playerHandBox.getChildren().clear();
-                // Hiển thị thông báo phù hợp khi game kết thúc, ví dụ:
-                // messageLabel.setText("Game đã kết thúc! Nhấn 'Ván mới' để chơi lại.");
-                // Hoặc để trống playerHandBox
                 selectedCards.clear();
                 waitingForInput = false;
             } else {
-                // GAME ĐANG CHẠY
                 if (currentPlayer != null && !currentPlayer.isAI()) {
                     // Đến lượt người chơi human
                     displayPlayerHand(currentPlayer);
-                    // boolean isHumanTurn = (currentPlayer == game.getCurrentPlayer()); // Luôn true trong khối if này
                     boolean isWaitingForInputState = (game.getCurrentTienLenState() == TienLenGameState.WAITING_FOR_PLAYER_INPUT);
 
                     playButton.setDisable(!isWaitingForInputState); // Chỉ kích hoạt khi đang chờ input
@@ -304,7 +288,6 @@ public class BasicUIFX extends CardGameGUIJavaFX<AbstractTienLenGame<? extends T
                     // Lượt của AI hoặc trạng thái khác (ví dụ: game vừa bắt đầu, chưa đến lượt ai)
                     playButton.setDisable(true);
                     passButton.setDisable(true);
-                    System.out.println("updateGameState: Không phải lượt Human hoặc AI đang chơi - Nút Đánh bài và Bỏ lượt đã bị vô hiệu hóa.");
                     playerHandBox.getChildren().clear();
                     if (currentPlayer != null && currentPlayer.isAI()) {
                          playerHandBox.getChildren().add(new Label("Đến lượt " + currentPlayer.getName() + " (AI)..."));
@@ -315,7 +298,6 @@ public class BasicUIFX extends CardGameGUIJavaFX<AbstractTienLenGame<? extends T
                     waitingForInput = false;
                 }
             }
-            // Nút "Ván mới" luôn được cập nhật dựa trên isGameOver
             newGameButton.setDisable(!isGameOver);
         });
     }
@@ -349,20 +331,15 @@ public class BasicUIFX extends CardGameGUIJavaFX<AbstractTienLenGame<? extends T
     private void handleNewGameButton() {
         selectedCards.clear();
         game.resetGame();        
-        // Reset UI components
         playerHandBox.getChildren().clear();
         playedCardsBox.getChildren().clear();
         messageLabel.setText("Chào mừng bạn đến với Tiến Lên Miền Nam!");
         
-        // Disable buttons until human player's turn
         playButton.setDisable(true);
         passButton.setDisable(true);
         newGameButton.setDisable(true);
 
-        // Update player panels (clear highlights, update card counts)
         updateGameState(); 
-        
-        // Start game loop again
         game.startGameLoop();
     }
 
@@ -391,20 +368,17 @@ public class BasicUIFX extends CardGameGUIJavaFX<AbstractTienLenGame<? extends T
         
         // Hiển thị dialog chiến thắng
         Platform.runLater(() -> {
-        	Alert alert = new Alert(AlertType.INFORMATION); //
-            alert.setTitle("Game Kết Thúc"); //
-            alert.setHeaderText("Kết quả ván đấu:"); //
-            alert.setContentText(sb.toString()); //
+        	Alert alert = new Alert(AlertType.INFORMATION); 
+            alert.setTitle("Game Kết Thúc"); 
+            alert.setHeaderText("Kết quả ván đấu:"); 
+            alert.setContentText(sb.toString()); 
 
-            // Chỉ cần nút OK (hoặc nút xác nhận tương ứng với ngôn ngữ)
-            // ButtonType confirmButton = new ButtonType("OK"); // Hoặc ButtonType.OK
-            alert.getButtonTypes().setAll(ButtonType.OK); // (Sửa để chỉ có nút OK)
+            alert.getButtonTypes().setAll(ButtonType.OK); 
 
-            alert.initOwner(primaryStage); //
-            alert.initModality(Modality.APPLICATION_MODAL); //
+            alert.initOwner(primaryStage); 
+            alert.initModality(Modality.APPLICATION_MODAL); 
 
             alert.showAndWait(); 
-         // Cần cập nhật trạng thái game và UI sau khi game kết thúc
             updateGameState(); 
         });
     }

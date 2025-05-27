@@ -1,4 +1,3 @@
-// File: ui/JavaFX/gamescreencomponents/PlayersListComponent.java
 package ui.JavaFX.gamescreencomponents;
 
 import core.Card;
@@ -16,13 +15,11 @@ public class PlayersListComponent extends VBox {
 
     public PlayersListComponent(List<TienLenPlayer> initialPlayers) {
         this.playerInfoComponents = new HashMap<>();
-        this.setSpacing(10); // Khoảng cách giữa các player panel
+        this.setSpacing(10);
         this.setPadding(new Insets(10));
         this.setAlignment(Pos.TOP_CENTER);
-        this.setStyle("-fx-background-color: transparent;"); // Nền trong suốt
+        this.setStyle("-fx-background-color: transparent;");
         this.setPrefWidth(210);
-        // Sắp xếp người chơi (ví dụ: human trước, rồi đến AI)
-        // Logic sắp xếp này có thể cần được truyền vào hoặc chuẩn hóa
         initialPlayers.sort((p1, p2) -> {
             if (!p1.isAI() && p2.isAI()) return -1;
             if (p1.isAI() && !p2.isAI()) return 1;
@@ -37,18 +34,11 @@ public class PlayersListComponent extends VBox {
     }
 
     public void updatePlayers(List<TienLenPlayer> players, TienLenPlayer currentPlayer, boolean isGameOver, Comparator<Card> cardComparator) {
-        // Có thể cần cập nhật lại danh sách children nếu số người chơi thay đổi (hiếm khi xảy ra giữa game)
-        // Hiện tại, chỉ cập nhật data cho các component đã có
         for (TienLenPlayer player : players) {
             PlayerInfoComponent pic = playerInfoComponents.get(player);
             if (pic != null) {
                 pic.updateData(player, player == currentPlayer, isGameOver);
             } else {
-                // Xử lý trường hợp player mới được thêm vào game (nếu có)
-                // PlayerInfoComponent newPic = new PlayerInfoComponent(player);
-                // playerInfoComponents.put(player, newPic);
-                // this.getChildren().add(newPic); // Cần logic sắp xếp lại vị trí
-                // newPic.updateData(player, player == currentPlayer, isGameOver);
                 System.err.println("PlayersListComponent: Không tìm thấy component cho player " + player.getName());
             }
         }

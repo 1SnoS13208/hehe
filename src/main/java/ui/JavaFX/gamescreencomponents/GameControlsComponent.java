@@ -1,4 +1,3 @@
-// File: ui/JavaFX/gamescreencomponents/GameControlsComponent.java
 package ui.JavaFX.gamescreencomponents;
 
 import javafx.event.ActionEvent;
@@ -15,13 +14,11 @@ public class GameControlsComponent extends VBox {
     private Button passButton;
     private Button newGameButton;
     private Button backToMainMenuButton;
-    // private SceneManager sceneManager; // Không cần trực tiếp nếu action đã được truyền vào
 
     public GameControlsComponent(EventHandler<ActionEvent> playAction,
                                  EventHandler<ActionEvent> passAction,
                                  EventHandler<ActionEvent> newGameAction,
                                  EventHandler<ActionEvent> backToMenuAction) {
-        // this.sceneManager = sceneManager; // Không cần nữa nếu dùng EventHandler
         this.setSpacing(15);
         this.setAlignment(Pos.CENTER);
         this.setPadding(new Insets(20));
@@ -29,10 +26,10 @@ public class GameControlsComponent extends VBox {
             "-fx-background-color: rgba(0, 0, 0, 0.3);" +
             "-fx-background-radius: 10;"
         );
-        this.setPrefWidth(190); // Điều chỉnh
+        this.setPrefWidth(190);
 
         playButton = new Button("Đánh bài");
-        styleButton(playButton, true); // true cho nút chính
+        styleButton(playButton, true);
         playButton.setOnAction(playAction);
 
         passButton = new Button("Bỏ lượt");
@@ -42,12 +39,12 @@ public class GameControlsComponent extends VBox {
         newGameButton = new Button("Ván mới");
         styleButton(newGameButton, false);
         newGameButton.setOnAction(newGameAction);
-        newGameButton.setDisable(true); // Ban đầu
+        newGameButton.setDisable(true); 
 
         backToMainMenuButton = new Button("Về Menu");
         styleButton(backToMainMenuButton, false);
         backToMainMenuButton.setOnAction(backToMenuAction);
-        backToMainMenuButton.setDisable(true); // Ban đầu
+        backToMainMenuButton.setDisable(true);
 
         this.getChildren().addAll(playButton, passButton, newGameButton, backToMainMenuButton);
     }
@@ -59,12 +56,12 @@ public class GameControlsComponent extends VBox {
 
         String baseColor = isPrimary ? "#FFFFFF" : "#E8F5E9";
         String hoverColor = isPrimary ? "#F5F5F5" : "#C8E6C9";
-        String textColor = "#004D40"; // Chữ xanh lá đậm trên nền sáng của nút
+        String textColor = "#004D40";
 
-        if (!isPrimary && button.getText().equals("Về Menu")) { // Style riêng cho nút Về Menu
-             baseColor = "#f8f9fa"; // Xám rất nhạt
+        if (!isPrimary && button.getText().equals("Về Menu")) {
+             baseColor = "#f8f9fa";
              hoverColor = "#e2e6ea";
-             textColor = "#495057"; // Chữ xám đậm
+             textColor = "#495057";
         }
 
 
@@ -95,7 +92,6 @@ public class GameControlsComponent extends VBox {
         backToMainMenuButton.setDisable(!isGameOver);
     }
     
-    // Thêm phương thức này nếu GraphicUIJavaFX cần lấy trạng thái của nút Play
     public void enablePlayButton(boolean enable) {
         if (playButton != null) {
             playButton.setDisable(!enable);

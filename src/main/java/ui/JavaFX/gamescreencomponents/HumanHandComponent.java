@@ -1,4 +1,3 @@
-// File: ui/JavaFX/gamescreencomponents/HumanHandComponent.java
 package ui.JavaFX.gamescreencomponents;
 
 import core.Card;
@@ -21,8 +20,8 @@ import java.util.List;
 
 public class HumanHandComponent extends VBox {
     private Label humanHandTitle;
-    private HBox playerHandBox; // Nơi chứa các CardView của người chơi
-    private EventHandler<MouseEvent> onCardClickHandler; // Callback khi card được click
+    private HBox playerHandBox;
+    private EventHandler<MouseEvent> onCardClickHandler;
 
     public HumanHandComponent(EventHandler<MouseEvent> onCardClickHandler) {
         this.onCardClickHandler = onCardClickHandler;

@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class GameMessageComponent extends VBox { // Kế thừa từ VBox
+public class GameMessageComponent extends VBox {
     private Label messageLabel;
 
     public GameMessageComponent(String initialMessage) {
@@ -20,9 +20,9 @@ public class GameMessageComponent extends VBox { // Kế thừa từ VBox
 
     private void styleComponent() {
         this.setAlignment(Pos.CENTER);
-        this.setPadding(new Insets(5, 10, 5, 10)); // Padding cho message box
-        this.setStyle(
-            "-fx-background-color: rgba(0, 0, 0, 0.3);" + // Nền đen mờ ví dụ
+        this.setPadding(new Insets(5, 10, 5, 10));
+        this.setStyle(  
+            "-fx-background-color: rgba(0, 0, 0, 0.3);" +
             "-fx-background-radius: 10;"
         );
 

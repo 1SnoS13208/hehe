@@ -1,9 +1,8 @@
-// File: core/AIStrategy/RandomStrategy.java
 package core.ai.tienlenai.strategies;
 
 import core.Card;
 import core.ai.tienlenai.TienLenAIStrategy;
-import core.ai.utils.PlayableMoveGenerator; // Sử dụng lớp tiện ích
+import core.ai.utils.PlayableMoveGenerator;
 import core.ai.utils.RemainingCardsValidator;
 import core.games.tienlen.TienLenVariantRuleSet;
 
@@ -13,15 +12,14 @@ import java.util.Random;
 
 public class RandomStrategy implements TienLenAIStrategy {
     private Random random = new Random();
-    private static final Card THREE_SPADES = new Card(Card.Suit.SPADES, Card.Rank.THREE); // Cụ thể cho Tiến Lên
-
+    
     @Override
     public List<Card> chooseCards(List<Card> currentHand, List<Card> lastPlayedCards, TienLenVariantRuleSet ruleSet, boolean isFirstTurnOfEntireGame) {
         if (currentHand.isEmpty()) {
             return new ArrayList<>();
         }
 
-        // Xử lý luật 3 Bích cho lượt đầu tiên của game (Đặc thù Tiến Lên)
+        // Xử lý luật 3 Bích cho lượt đầu tiên của game 
         if (isFirstTurnOfEntireGame) {
         	if(ruleSet.startingCard() == null) return List.of(currentHand.get(random.nextInt(currentHand.size())));
             if (ruleSet.hasStartingCard(currentHand) && ruleSet.startingCard() != null) {
@@ -31,10 +29,8 @@ public class RandomStrategy implements TienLenAIStrategy {
                 if ((lastPlayedCards == null || lastPlayedCards.isEmpty()) && ruleSet.isValidCombination(threeSpadePlay)) {
                     return threeSpadePlay;
                 }
-                // Nếu có lỗi hoặc không được đánh (rất hiếm), thì sẽ đi xuống logic random bên dưới
             } else {
                 // Nếu không có 3 Bích trong lượt đầu game, Random AI sẽ không đánh gì (bỏ lượt)
-                // vì luật Tiến Lên yêu cầu.
                 return new ArrayList<>();
             }
         }

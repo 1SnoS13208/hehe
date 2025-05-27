@@ -15,15 +15,15 @@ import ui.JavaFX.SceneManager;
 
 public class SelectNumberOfHumansSceneView {
     private SceneManager sceneManager;
-    private Label humanCountDisplayLabelToUpdate; // Label từ PlayerCustomizationSceneView
-    private Label aiCountDisplayLabelToUpdate;   // Label từ PlayerCustomizationSceneView
+    private Label humanCountDisplayLabelToUpdate; 
+    private Label aiCountDisplayLabelToUpdate;   
     private int tempSelectedHumanPlayers;
 
     public SelectNumberOfHumansSceneView(SceneManager sceneManager, Label humanCountDisplayLabel, Label aiCountDisplayLabel) {
         this.sceneManager = sceneManager;
         this.humanCountDisplayLabelToUpdate = humanCountDisplayLabel;
         this.aiCountDisplayLabelToUpdate = aiCountDisplayLabel;
-        this.tempSelectedHumanPlayers = sceneManager.getNumberOfHumanPlayers(); // Khởi tạo giá trị tạm
+        this.tempSelectedHumanPlayers = sceneManager.getNumberOfHumanPlayers(); 
     }
 
     public Parent createContent() {
@@ -37,8 +37,9 @@ public class SelectNumberOfHumansSceneView {
 
 
         Label title = new Label("Chọn Số Người Chơi Thật");
-        title.setFont(Font.font("Arial", FontWeight.BLACK, 30)); // Font đậm hơn, màu sắc tùy chỉnh cho phù hợp nền
-	    title.setTextFill(javafx.scene.paint.Color.WHITE); // Ví dụ chữ trắng nếu nền tối        title.setFont(Font.font("Arial", FontWeight.BLACK, 30));
+        title.setFont(Font.font("Arial", FontWeight.BLACK, 30)); 
+	    title.setTextFill(javafx.scene.paint.Color.WHITE); 
+        title.setFont(Font.font("Arial", FontWeight.BLACK, 30));
         title.setTextFill(Color.WHITE);
         DropShadow dsText = new DropShadow(); dsText.setRadius(3); dsText.setOffsetX(1); dsText.setOffsetY(1); dsText.setColor(Color.rgb(0,0,0,0.7));
         title.setEffect(dsText);
@@ -52,12 +53,10 @@ public class SelectNumberOfHumansSceneView {
         selectorBox.setAlignment(Pos.CENTER);
 
         Button decrementButton = new Button("-");
-        // ... (style decrementButton) ...
         styleSubSceneNavButton(decrementButton, "#bdc3c7", "#95a5a6", true);
 
 
         Label largeHumanCountDisplay = new Label(String.valueOf(this.tempSelectedHumanPlayers));
-        // ... (style largeHumanCountDisplay) ...
         largeHumanCountDisplay.setFont(Font.font("Arial", FontWeight.BOLD, 72));
         largeHumanCountDisplay.setTextFill(Color.WHITE);
         largeHumanCountDisplay.setEffect(dsText);
@@ -66,7 +65,6 @@ public class SelectNumberOfHumansSceneView {
 
 
         Button incrementButton = new Button("+");
-        // ... (style incrementButton) ...
         styleSubSceneNavButton(incrementButton, "#bdc3c7", "#95a5a6", true);
 
 
@@ -86,19 +84,17 @@ public class SelectNumberOfHumansSceneView {
         selectorBox.getChildren().addAll(decrementButton, largeHumanCountDisplay, incrementButton);
 
         Button confirmButton = new Button("Xác Nhận");
-        // ... (style confirmButton) ...
         styleSubSceneNavButton(confirmButton, "#FF8C00", "#FFA500", false);
 
         confirmButton.setOnAction(e -> {
-            sceneManager.setNumberOfHumanPlayers(this.tempSelectedHumanPlayers); // Cập nhật giá trị trong SceneManager
-            // Cập nhật trực tiếp các label đã truyền vào (nếu cần, hoặc để SceneManager tự làm)
+            sceneManager.setNumberOfHumanPlayers(this.tempSelectedHumanPlayers); 
             if (humanCountDisplayLabelToUpdate != null) {
                 humanCountDisplayLabelToUpdate.setText(String.valueOf(sceneManager.getNumberOfHumanPlayers()));
             }
             if (aiCountDisplayLabelToUpdate != null) {
                 aiCountDisplayLabelToUpdate.setText(String.valueOf(sceneManager.getNumberOfAIPlayers()));
             }
-            sceneManager.showPlayerCustomizationScene(); // Quay lại
+            sceneManager.showPlayerCustomizationScene(); 
         });
         VBox.setMargin(confirmButton, new Insets(20, 0, 0, 0));
 

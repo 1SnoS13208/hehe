@@ -1,8 +1,6 @@
 package ui.JavaFX.Scenes;
 
-
-
-import core.ai.tienlenai.TienLenAI; // Cần để sử dụng Enum StrategyType
+import core.ai.tienlenai.TienLenAI; 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -14,31 +12,29 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import ui.JavaFX.SceneManager; // Import SceneManager để gọi lại
+import ui.JavaFX.SceneManager; 
 
 import java.util.List;
 
 public class SelectAIStrategySceneView {
 
     private SceneManager sceneManager;
-    private Label aiStrategyDisplayLabelToUpdate; // Label từ PlayerCustomizationSceneView để cập nhật trực tiếp
+    private Label aiStrategyDisplayLabelToUpdate; 
     private TienLenAI.StrategyType tempSelectedAIStrategy;
 
-    // Constructor nhận SceneManager và Label cần cập nhật
     public SelectAIStrategySceneView(SceneManager sceneManager, Label aiStrategyDisplayLabel) {
         this.sceneManager = sceneManager;
         this.aiStrategyDisplayLabelToUpdate = aiStrategyDisplayLabel;
-        // Khởi tạo giá trị tạm thời bằng giá trị hiện tại trong SceneManager
+        
         this.tempSelectedAIStrategy = sceneManager.getAiStrategy();
     }
 
     public Parent createContent() {
-        VBox rootPane = new VBox(25); // Khoảng cách giữa các thành phần
+        VBox rootPane = new VBox(25); 
         rootPane.setAlignment(Pos.CENTER);
-        rootPane.setPadding(new Insets(40)); // Padding xung quanh
+        rootPane.setPadding(new Insets(40)); 
 
-        // Đặt ảnh nền (tương tự như các scene khác)
-        String imagePath = "/background/mainmenu.jpg"; // Sử dụng ảnh nền chung hoặc ảnh riêng
+        String imagePath = "/background/mainmenu.jpg"; 
         try {
             String imageUrl = getClass().getResource(imagePath).toExternalForm();
             rootPane.setStyle(
@@ -49,7 +45,7 @@ public class SelectAIStrategySceneView {
             );
         } catch (Exception e) {
             System.err.println("Lỗi tải ảnh nền cho SelectAIStrategyScene: " + imagePath + " - " + e.getMessage());
-            rootPane.setStyle("-fx-background-color: #ECEFF1;"); // Màu nền dự phòng
+            rootPane.setStyle("-fx-background-color: #ECEFF1;"); 
         }
 
         Label title = new Label("Chọn Chiến Lược Cho AI");
@@ -63,19 +59,15 @@ public class SelectAIStrategySceneView {
         title.setEffect(dsText);
         VBox.setMargin(title, new Insets(0, 0, 30, 0));
 
-        // Container cho các Label chọn chiến lược
-        VBox strategyLabelsContainer = new VBox(18); // Khoảng cách giữa các label
+        VBox strategyLabelsContainer = new VBox(18); 
         strategyLabelsContainer.setAlignment(Pos.CENTER);
-        strategyLabelsContainer.setMaxWidth(350); // Giới hạn chiều rộng container
-
-        // Tạo các Label chọn chiến lược
+        strategyLabelsContainer.setMaxWidth(350); 
         Label smartLabel = createStrategyLabel("Thông Minh (Smart)", TienLenAI.StrategyType.SMART);
         Label greedyLabel = createStrategyLabel("Tham Lam (Greedy)", TienLenAI.StrategyType.GREEDY);
         Label randomLabel = createStrategyLabel("Ngẫu Nhiên (Random)", TienLenAI.StrategyType.RANDOM);
 
         List<Label> allStrategyLabels = List.of(smartLabel, greedyLabel, randomLabel);
 
-        // Hàm cập nhật style cho các Label
         Runnable updateLabelStyles = () -> {
             for (Label label : allStrategyLabels) {
                 TienLenAI.StrategyType labelStrategy = (TienLenAI.StrategyType) label.getUserData();
@@ -87,30 +79,28 @@ public class SelectAIStrategySceneView {
             }
         };
 
-        // Gán sự kiện Click và UserData cho từng Label
         for (Label label : allStrategyLabels) {
             label.setOnMouseClicked(event -> {
                 this.tempSelectedAIStrategy = (TienLenAI.StrategyType) label.getUserData();
-                updateLabelStyles.run(); // Cập nhật style của tất cả các label
+                updateLabelStyles.run(); 
             });
         }
         
-        updateLabelStyles.run(); // Áp dụng style ban đầu
+        updateLabelStyles.run(); 
 
         strategyLabelsContainer.getChildren().addAll(smartLabel, greedyLabel, randomLabel);
 
-        // Nút Xác Nhận
         Button confirmButton = new Button("Xác Nhận");
-        styleActionButton(confirmButton, "#FF8C00", "#FFA500"); // Màu cam
+        styleActionButton(confirmButton, "#FF8C00", "#FFA500"); 
         VBox.setMargin(confirmButton, new Insets(35, 0, 0, 0));
 
         confirmButton.setOnAction(e -> {
-            sceneManager.setAiStrategy(this.tempSelectedAIStrategy); // Cập nhật chiến lược AI chính thức trong SceneManager
-            // Cập nhật trực tiếp label trên màn hình PlayerCustomization (nếu đã truyền vào)
+            sceneManager.setAiStrategy(this.tempSelectedAIStrategy); 
+            
             if (aiStrategyDisplayLabelToUpdate != null) {
                 aiStrategyDisplayLabelToUpdate.setText(this.tempSelectedAIStrategy.toString());
             }
-            sceneManager.showPlayerCustomizationScene(); // Quay lại màn hình tùy chỉnh
+            sceneManager.showPlayerCustomizationScene(); 
         });
 
         rootPane.getChildren().addAll(title, strategyLabelsContainer, confirmButton);
@@ -119,9 +109,8 @@ public class SelectAIStrategySceneView {
 
     private Label createStrategyLabel(String text, TienLenAI.StrategyType strategyType) {
         Label label = new Label(text);
-        label.setUserData(strategyType); // Lưu trữ loại strategy vào UserData của Label
+        label.setUserData(strategyType); 
         label.setCursor(Cursor.HAND);
-        // Style ban đầu sẽ được áp dụng bởi updateLabelStyles
         return label;
     }
 

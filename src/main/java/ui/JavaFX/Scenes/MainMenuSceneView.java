@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.application.Platform;
-import ui.JavaFX.SceneManager; // Import SceneManager để gọi lại
+import ui.JavaFX.SceneManager;
 
 public class MainMenuSceneView {
 
@@ -26,7 +26,7 @@ public class MainMenuSceneView {
         menuLayout.setAlignment(Pos.CENTER);
         menuLayout.setPadding(new Insets(50));
 
-        String imagePath = "/background/mainmenu.jpg"; // Đường dẫn tới ảnh nền của bạn
+        String imagePath = "/background/mainmenu.jpg";
         try {
             String imageUrl = getClass().getResource(imagePath).toExternalForm();
             menuLayout.setStyle(
@@ -37,7 +37,7 @@ public class MainMenuSceneView {
             );
         } catch (Exception e) {
             System.err.println("Lỗi tải ảnh nền cho MainMenuScene: " + imagePath + " - " + e.getMessage());
-            menuLayout.setStyle("-fx-background-color: #D3D3D3;"); // Màu nền dự phòng
+            menuLayout.setStyle("-fx-background-color: #D3D3D3;");
         }
 
         Label titleLabel = new Label("GAME BÀI");
@@ -46,17 +46,17 @@ public class MainMenuSceneView {
         DropShadow ds = new DropShadow();
         ds.setOffsetY(2.0);
         ds.setOffsetX(2.0);
-        ds.setColor(Color.rgb(50, 50, 50, 0.4)); // Bóng tối hơn chút
+        ds.setColor(Color.rgb(50, 50, 50, 0.4));
         titleLabel.setEffect(ds);
 
         Button newGameButton = new Button("Bắt đầu");
-        styleMenuButton(newGameButton, "#FF8C00", "#FFA500"); // Màu cam
-        newGameButton.setOnAction(e -> sceneManager.showPlayerCustomizationScene()); // Gọi SceneManager
+        styleMenuButton(newGameButton, "#FF8C00", "#FFA500");
+        newGameButton.setOnAction(e -> sceneManager.showPlayerCustomizationScene());
 
         Button exitButton = new Button("Thoát Game");
-        styleMenuButton(exitButton, "#e74c3c", "#c0392b"); // Màu đỏ
+        styleMenuButton(exitButton, "#e74c3c", "#c0392b");
         exitButton.setOnAction(e -> {
-            sceneManager.stopCurrentGame(); // Đảm bảo game được dừng nếu đang chạy
+            sceneManager.stopCurrentGame();
             Platform.exit();
             System.exit(0);
         });
